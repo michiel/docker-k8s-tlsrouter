@@ -1,0 +1,34 @@
+@startuml
+
+scale 2
+title tlsrouter
+skinparam componentStyle uml2
+
+component kubectl
+
+package "Service Namespace (id:x)" {
+  component "tlsrouter-service\nmyproxy.example.com" as tlsrouter_service
+  component "tlsrouter-container" as tlsrouter_container
+}
+
+package "Default Namespace (id:0)" {
+  component "kubernetes.default.svc" as kubernetes_service
+}
+
+kubectl -r-> tlsrouter_service : HTTPS/443
+tlsrouter_service -d-> tlsrouter_container : HTTPS/8443
+tlsrouter_container -r-> kubernetes_service : HTTP/443
+
+note bottom of tlsrouter_container
+  * TLS Passthrough
+end note
+
+note bottom of kubernetes_service
+  * TLS Termination
+end note
+
+legend
+  * Every namespace is joined with network id:0
+end legend
+@enduml
+

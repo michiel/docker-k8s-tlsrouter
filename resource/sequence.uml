@@ -1,0 +1,38 @@
+@startuml
+
+scale 1.5
+title tlsrouter
+
+entity "kubectl" as kubectl
+
+box "Service Namespace (id:x)" #lightblue
+  entity "tlsrouter-service" as tlsrouter_service
+  entity "tlsrouter-container" as tlsrouter_container
+end box
+
+box "Default Namespace (id:0)" #white
+  entity "kubernetes-service" as kubernetes_service
+  database "certificate" as certificate
+end box
+
+kubectl -> tlsrouter_service : L3/tcp/443
+tlsrouter_service -> tlsrouter_container : L4/https/443
+note right of tlsrouter_service
+  * TCP Pass-through
+end note
+tlsrouter_container -> kubernetes_service : L4/https/443
+note right of tlsrouter_container
+  * SNI inspection
+  * Routing decision
+  * TLS Pass-through
+end note
+kubernetes_service -> certificate
+note right of kubernetes_service
+  * TLS termination
+end note
+certificate -> kubernetes_service
+kubernetes_service -> tlsrouter_container
+tlsrouter_container -> tlsrouter_service
+tlsrouter_service -> kubectl
+
+@enduml
