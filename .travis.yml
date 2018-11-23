@@ -1,0 +1,19 @@
+sudo: true
+dist: trusty
+
+jobs:
+  include:
+    - stage: build and test
+      script:
+      - npm set progress=false
+      - npm install
+      - npm run build
+      - npm run webpack:production
+      - npm run test
+    - stage: build docker image
+      script:
+      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+      - docker build -t tlsrouter .
+      - docker images
+      - docker tag tlsrouter $DOCKER_USERNAME/tlsrouter
+      - docker push $DOCKER_USERNAME/tlsrouter
