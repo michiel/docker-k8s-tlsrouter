@@ -16,9 +16,9 @@ package "Kubernetes cluster" {
   }
 }
 
-kubectl -r-> tlsrouter_service : HTTPS/443
-tlsrouter_service -d-> tlsrouter_container : HTTPS/8443
-tlsrouter_container -r-> kubernetes_service : HTTP/443
+kubectl -r-> tlsrouter_service : TCP/443
+tlsrouter_service -d-> tlsrouter_container : TCP/8443
+tlsrouter_container -r-> kubernetes_service : HTTPS/443
 
 note bottom of tlsrouter_container
   * TLS Passthrough
