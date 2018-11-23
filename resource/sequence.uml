@@ -1,6 +1,5 @@
 @startuml
 
-scale 1.5
 title tlsrouter
 
 entity "kubectl" as kubectl

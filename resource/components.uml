@@ -1,18 +1,19 @@
 @startuml
 
-scale 2
 title tlsrouter
 skinparam componentStyle uml2
 
 component kubectl
 
-package "Service Namespace (id:x)" {
-  component "tlsrouter-service\nmyproxy.example.com" as tlsrouter_service
-  component "tlsrouter-container" as tlsrouter_container
-}
+package "Kubernetes cluster" {
+  package "Service Namespace (id:x)" {
+    component "tlsrouter-service\nmyproxy.example.com" as tlsrouter_service
+    component "tlsrouter-container" as tlsrouter_container
+  }
 
-package "Default Namespace (id:0)" {
-  component "kubernetes.default.svc" as kubernetes_service
+  package "Default Namespace (id:0)" {
+    component "kubernetes.default.svc" as kubernetes_service
+  }
 }
 
 kubectl -r-> tlsrouter_service : HTTPS/443
